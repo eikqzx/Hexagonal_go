@@ -24,7 +24,9 @@ func main() {
 	}
 
 	// สร้าง Fiber app
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		Prefork: true, // เปิดใช้งาน Prefork
+	})
 
 	// สร้าง HTTP Handler
 	httpHandler := http.NewHandler()
