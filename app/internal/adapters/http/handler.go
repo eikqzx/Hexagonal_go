@@ -1,6 +1,7 @@
 package http
 
 import (
+	"Hexagonal_go/app/internal/core/model"
 	"Hexagonal_go/app/internal/core/service"
 	"log"
 
@@ -12,6 +13,7 @@ type Handler struct {
 	userService              service.UserService
 	landOfficeService        service.LandOfficeService
 	getSvaCadastral01Service service.GetSVACadastral01Service
+	getSVACadastralImageNull service.Get02getSVACadastralImageNullService
 }
 
 // NewHandler สร้าง Handler ใหม่
@@ -19,7 +21,8 @@ func NewHandler() *Handler {
 	userService := service.NewUserService()
 	landOfficeService := service.NewLandOfficeService()
 	getSvaCadastral01Service := service.NewGetSVACadastral01Service()
-	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service} // ส่งค่าไปยัง Handler
+	getSVACadastralImageNull := service.NewGet02getSVACadastralImageNullService()
+	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull} // ส่งค่าไปยัง Handler
 }
 
 // GetUsers ดึงข้อมูลผู้ใช้ทั้งหมด
@@ -57,4 +60,46 @@ func (h *Handler) GetFetch01getSVACadastral(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching 01getSVACadastral")
 	}
 	return c.JSON(svaCadastral01)
+}
+
+func (h *Handler) GetFetch02SVACadastralImageNull(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ int64 `json:"LANDOFFICE_SEQ"` // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+
+	svaCadastral01, err := h.getSVACadastralImageNull.Fetch02getSVACadastralImageNullService(request.LANDOFFICE_SEQ) // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching 01getSVACadastral")
+	}
+	return c.JSON(svaCadastral01)
+}
+
+func (h *Handler) Update02SVACadastralImageNull(c *fiber.Ctx) error {
+	var cadastralImage model.CadastralImage
+	if err := c.BodyParser(&cadastralImage); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request payload")
+	}
+
+	result, err := h.getSVACadastralImageNull.Update02SVACadastralImageNullService(cadastralImage)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	response := map[string]interface{}{
+		"message":       "Cadastral image updated successfully",
+		"rows_affected": rowsAffected,
+		"succeed":       rowsAffected > 0,
+	}
+	return c.JSON(response)
 }

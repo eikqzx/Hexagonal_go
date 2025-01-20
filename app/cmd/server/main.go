@@ -33,6 +33,8 @@ func main() {
 	app.Get("/users", httpHandler.GetUsers)
 	app.Get("/landoffices", httpHandler.GetAllLandOffice)
 	app.Post("/01getSVACadastral", httpHandler.GetFetch01getSVACadastral)
+	app.Post("/02getCadastralImageNull", httpHandler.GetFetch02SVACadastralImageNull)
+	app.Post("/02updateCadastralImageNull", httpHandler.Update02SVACadastralImageNull)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)
