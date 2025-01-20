@@ -10,7 +10,7 @@ func ReadSQLFromFile(filePath string) (string, error) {
 	// อ่านไฟล์ SQL
 	sqlBytes, err := os.ReadFile(filePath)
 	if err != nil {
-		return "", fmt.Errorf("Error reading SQL file %s: %v", filePath, err)
+		return "", fmt.Errorf("error reading SQL file %s: %v", filePath, err)
 	}
 	return string(sqlBytes), nil
 }

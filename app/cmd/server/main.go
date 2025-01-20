@@ -30,6 +30,7 @@ func main() {
 	httpHandler := http.NewHandler()
 	app.Get("/users", httpHandler.GetUsers)
 	app.Get("/landoffices", httpHandler.GetAllLandOffice)
+	app.Post("/01getSVACadastral", httpHandler.GetFetch01getSVACadastral)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)

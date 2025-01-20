@@ -3,7 +3,6 @@ package persistence
 import (
 	"Hexagonal_go/app/internal/core/model"
 	"fmt"
-	"log"
 	"path/filepath"
 )
 
@@ -15,15 +14,15 @@ func (r *LandOfficeRepositoryImpl) FetchAllLandOffice() ([]model.LandOffice, err
 		InitDB()
 	}
 	queryPath := filepath.Join("sql", "MAS", "TB_MAS_LANDOFFICE", "select.sql")
-	log.Println(queryPath)
+	// log.Println(queryPath)
 	query, err := ReadSQLFromFile(queryPath)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to read SQL query file: %v", err)
+		return nil, fmt.Errorf("failed to read SQL query file: %v", err)
 	}
 
 	rows, err := DB.Query(query)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to query land offices: %v", err)
+		return nil, fmt.Errorf("failed to query land offices: %v", err)
 	}
 	defer rows.Close()
 
@@ -53,9 +52,12 @@ func (r *LandOfficeRepositoryImpl) FetchAllLandOffice() ([]model.LandOffice, err
 			&landOffice.TB_TOR_CADASTRAL_IMAGE, &landOffice.TB_TOR_CADASTRAL_BORROW,
 			&landOffice.TB_TOR_CIRACORE_IMAGE,
 		); err != nil {
-			return nil, fmt.Errorf("Failed to scan row: %v", err)
+			return nil, fmt.Errorf("failed to scan row: %v", err)
 		}
 		landOffices = append(landOffices, landOffice)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows error: %v", err)
 	}
 
 	return landOffices, nil
