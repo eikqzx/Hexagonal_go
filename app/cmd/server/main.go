@@ -5,6 +5,9 @@ import (
 	"log"
 	"os"
 
+	// "os/signal"
+	// "syscall"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -12,7 +15,7 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
 
 	port := os.Getenv("PORT")
@@ -26,8 +29,13 @@ func main() {
 	// สร้าง HTTP Handler
 	httpHandler := http.NewHandler()
 	app.Get("/users", httpHandler.GetUsers)
-
+	app.Get("/landoffices", httpHandler.GetAllLandOffice)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)
+
+	// quit := make(chan os.Signal, 1)
+	// signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	// <-quit
+	// log.Println("Shutting down server...")
 }

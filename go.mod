@@ -9,6 +9,9 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/go-logfmt/logfmt v0.6.0 // indirect
+	github.com/godror/godror v0.46.0 // indirect
+	github.com/godror/knownpb v0.1.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -18,5 +21,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/sys v0.28.0 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 )
