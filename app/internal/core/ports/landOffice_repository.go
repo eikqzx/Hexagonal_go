@@ -8,6 +8,8 @@ import (
 // LandOfficeRepository Interface สำหรับดึงข้อมูลผู้ใช้
 type LandOfficeRepository interface {
 	FetchAllLandOffice() ([]model.LandOffice, error) // ฟังก์ชันที่ต้องมีใน repository
+	FetchSVALandOffice() ([]model.LandOfficeSVA, error)
+	FetchLandOfficeByProvinceSeq(provinceSeq int64) ([]model.LandOffice, error)
 }
 
 func NewLandOfficeRepository() LandOfficeRepository {

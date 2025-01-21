@@ -21,3 +21,11 @@ func NewLandOfficeService() *LandOfficeService {
 func (s *LandOfficeService) GetAllLandOffice() ([]model.LandOffice, error) {
 	return s.landOfficeRepo.FetchAllLandOffice()
 }
+
+func (s *LandOfficeService) GetSVALandOffice() ([]model.LandOfficeSVA, error) {
+	return s.landOfficeRepo.FetchSVALandOffice()
+}
+
+func (s *LandOfficeService) GetLandOfficeByLandOffice(provinceSeq int64) ([]model.LandOffice, error) {
+	return s.landOfficeRepo.FetchLandOfficeByProvinceSeq(provinceSeq)
+}

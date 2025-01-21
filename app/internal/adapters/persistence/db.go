@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
-	_ "github.com/godror/godror" // Import godror driver
+	_ "github.com/godror/godror"
 	"github.com/joho/godotenv"
 )
 
 var DB *sql.DB
 
-// InitDB เชื่อมต่อกับ Oracle Database
 func InitDB() {
 	// โหลดไฟล์ .env
 	err := godotenv.Load()
@@ -38,18 +38,24 @@ func InitDB() {
 		log.Fatalf("Failed to connect to Oracle Database: %v", err)
 	}
 
-	// ทดสอบการเชื่อมต่อ
-	err = DB.Ping()
-	if err != nil {
-		log.Fatalf("Failed to ping Oracle Database: %v", err)
+	// ตั้งค่า connection pool
+	DB.SetMaxOpenConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถเปิดได้พร้อมกัน
+	DB.SetMaxIdleConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถอยู่ในสถานะ idle
+	DB.SetConnMaxLifetime(5 * time.Minute) // ระยะเวลาสูงสุดที่การเชื่อมต่อสามารถใช้งานได้
+
+	// ตรวจสอบการเชื่อมต่อ
+	if err := DB.Ping(); err != nil {
+		log.Fatalf("Failed to ping database: %v", err)
 	}
-	log.Println("Connected to Oracle Database!")
 }
 
-// CloseDB ปิดการเชื่อมต่อกับฐานข้อมูล
 func CloseDB() {
 	if DB != nil {
-		DB.Close()
-		log.Println("Database connection closed.")
+		err := DB.Close()
+		if err != nil {
+			log.Printf("Error closing database connection: %v", err)
+		} else {
+			log.Println("Database connection closed successfully.")
+		}
 	}
 }

@@ -2,8 +2,9 @@ package model
 
 import "time"
 
+// LandOffice เป็นโมเดลสำหรับข้อมูล LandOffice
 type LandOffice struct {
-	LANDOFFICE_SEQ          *int64     `json:"LANDOFFICE_SEQ"`
+	LANDOFFICE_SEQ          int64      `json:"LANDOFFICE_SEQ"`
 	LANDOFFICE_ID           *string    `json:"LANDOFFICE_ID"`
 	LANDOFFICE_DOL_ID       *string    `json:"LANDOFFICE_DOL_ID"`
 	LANDOFFICE_DPIS_ID      *string    `json:"LANDOFFICE_DPIS_ID"`
@@ -26,13 +27,13 @@ type LandOffice struct {
 	GFMIS_CAPITAL_ID        *string    `json:"GFMIS_CAPITAL_ID"`
 	GFMIS_CAPITAL_PAY_ID    *string    `json:"GFMIS_CAPITAL_PAY_ID"`
 	AREA_CODE               *string    `json:"AREA_CODE"`
-	ORA_GEOMETRY            *string    `json:"ORA_GEOMETRY"` // รองรับค่า null
-	LANDOFFICE_USED         *string    `json:"LANDOFFICE_USED"`
-	LANDOFFICE_TYPE_SEQ     *string    `json:"LANDOFFICE_TYPE_SEQ"`
+	ORA_GEOMETRY            *string    `json:"ORA_GEOMETRY"`
+	LANDOFFICE_USED         *int64     `json:"LANDOFFICE_USED"`
+	LANDOFFICE_TYPE_SEQ     *int64     `json:"LANDOFFICE_TYPE_SEQ"`
 	OFFICE_INTERNAL_FLAG    *string    `json:"OFFICE_INTERNAL_FLAG"`
-	REF_LANDOFFICE_SEQ      *string    `json:"REF_LANDOFFICE_SEQ"`
-	REGION_SEQ              *string    `json:"REGION_SEQ"`
-	OFFICE_TYPE_SEQ         *string    `json:"OFFICE_TYPE_SEQ"`
+	REF_LANDOFFICE_SEQ      int64      `json:"REF_LANDOFFICE_SEQ"`
+	REGION_SEQ              *int64     `json:"REGION_SEQ"`
+	OFFICE_TYPE_SEQ         *int64     `json:"OFFICE_TYPE_SEQ"`
 	PROVINCE_SEQ            *int64     `json:"PROVINCE_SEQ"`
 	AMPHUR_SEQ              *int64     `json:"AMPHUR_SEQ"`
 	TAMBOL_SEQ              *int64     `json:"TAMBOL_SEQ"`
@@ -45,13 +46,13 @@ type LandOffice struct {
 	LANDOFFICE_REPORT       *string    `json:"LANDOFFICE_REPORT"`
 	LANDOFFICE_OHT_NAME     *string    `json:"LANDOFFICE_OHT_NAME"`
 	LANDOFFICE_PICT         *string    `json:"LANDOFFICE_PICT"`
-	LANDOFFICE_BUILD_DTM    *string    `json:"LANDOFFICE_BUILD_DTM"`
-	LANDOFFICE_CANCEL_DTM   *string    `json:"LANDOFFICE_CANCEL_DTM"`
-	LANDOFFICE_LEVELUP_DTM  *string    `json:"LANDOFFICE_LEVELUP_DTM"`
+	LANDOFFICE_BUILD_DTM    *time.Time `json:"LANDOFFICE_BUILD_DTM"`
+	LANDOFFICE_CANCEL_DTM   *time.Time `json:"LANDOFFICE_CANCEL_DTM"`
+	LANDOFFICE_LEVELUP_DTM  *time.Time `json:"LANDOFFICE_LEVELUP_DTM"`
 	LANDOFFICE_SNAME_EN     *string    `json:"LANDOFFICE_SNAME_EN"`
 	LANDOFFICE_MOU          *string    `json:"LANDOFFICE_MOU"`
-	LANDOFFICE_REGULATION   *string    `json:"LANDOFFICE_REGULATION"`
-	ON_DC                   *string    `json:"ON_DC"`
+	LANDOFFICE_REGULATION   *int64     `json:"LANDOFFICE_REGULATION"`
+	ON_DC                   *int64     `json:"ON_DC"`
 	COMPANY_CODE            *string    `json:"COMPANY_CODE"`
 	TAX_ID                  *string    `json:"TAX_ID"`
 	LANDOFFICE_NOTE         *string    `json:"LANDOFFICE_NOTE"`
@@ -62,4 +63,5 @@ type LandOffice struct {
 	TB_TOR_CADASTRAL_IMAGE  *string    `json:"TB_TOR_CADASTRAL_IMAGE"`
 	TB_TOR_CADASTRAL_BORROW *string    `json:"TB_TOR_CADASTRAL_BORROW"`
 	TB_TOR_CIRACORE_IMAGE   *string    `json:"TB_TOR_CIRACORE_IMAGE"`
+	PROVINCE_NAME_TH        *string    `json:"PROVINCE_NAME_TH"`
 }

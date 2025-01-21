@@ -14,6 +14,7 @@ type Handler struct {
 	landOfficeService        service.LandOfficeService
 	getSvaCadastral01Service service.GetSVACadastral01Service
 	getSVACadastralImageNull service.Get02getSVACadastralImageNullService
+	summarySheetCode         service.SummarySheetCodeService
 }
 
 // NewHandler สร้าง Handler ใหม่
@@ -22,7 +23,8 @@ func NewHandler() *Handler {
 	landOfficeService := service.NewLandOfficeService()
 	getSvaCadastral01Service := service.NewGetSVACadastral01Service()
 	getSVACadastralImageNull := service.NewGet02getSVACadastralImageNullService()
-	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull} // ส่งค่าไปยัง Handler
+	summarySheetCode := service.NewSummarySheetCodeService()
+	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull, summarySheetCode: *summarySheetCode} // ส่งค่าไปยัง Handler
 }
 
 // GetUsers ดึงข้อมูลผู้ใช้ทั้งหมด
@@ -42,6 +44,33 @@ func (h *Handler) GetAllLandOffice(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
 	}
 	return c.JSON(landOffices)
+}
+
+func (h *Handler) GetSVALandOffice(c *fiber.Ctx) error {
+	landOffices, err := h.landOfficeService.GetSVALandOffice() // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
+	}
+	return c.JSON(landOffices)
+}
+
+func (h *Handler) GetLandOfficeByLandOfficeSeq(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ int64 `json:"LANDOFFICE_SEQ"` // Expecting landOfficeSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+
+	landOffice, err := h.landOfficeService.GetLandOfficeByLandOffice(request.LANDOFFICE_SEQ) // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land office")
+	}
+	return c.JSON(landOffice)
 }
 
 func (h *Handler) GetFetch01getSVACadastral(c *fiber.Ctx) error {
@@ -102,4 +131,22 @@ func (h *Handler) Update02SVACadastralImageNull(c *fiber.Ctx) error {
 		"succeed":       rowsAffected > 0,
 	}
 	return c.JSON(response)
+}
+
+func (h *Handler) GetSummarySheetCode(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ int64 `json:"LANDOFFICE_SEQ"` // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+
+	summarySheetCode, err := h.summarySheetCode.FetchSummarySheetCode(request.LANDOFFICE_SEQ) // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching 01getSVACadastral")
+	}
+	return c.JSON(summarySheetCode)
 }

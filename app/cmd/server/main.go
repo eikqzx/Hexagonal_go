@@ -5,9 +5,6 @@ import (
 	"log"
 	"os"
 
-	// "os/signal"
-	// "syscall"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -32,9 +29,12 @@ func main() {
 	httpHandler := http.NewHandler()
 	app.Get("/users", httpHandler.GetUsers)
 	app.Get("/landoffices", httpHandler.GetAllLandOffice)
+	app.Get("/landofficesSVA", httpHandler.GetSVALandOffice)
+	app.Post("/getMasLandOfficeByProvince", httpHandler.GetLandOfficeByLandOfficeSeq)
 	app.Post("/01getSVACadastral", httpHandler.GetFetch01getSVACadastral)
 	app.Post("/02getCadastralImageNull", httpHandler.GetFetch02SVACadastralImageNull)
 	app.Post("/02updateCadastralImageNull", httpHandler.Update02SVACadastralImageNull)
+	app.Post("/getSummarySheetCode", httpHandler.GetSummarySheetCode)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)
