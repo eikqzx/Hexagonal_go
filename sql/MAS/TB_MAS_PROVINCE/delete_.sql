@@ -1,0 +1,8 @@
+
+
+DELETE 
+FROM MAS_.TB_MAS_PROVINCE 
+WHERE 1 = 1 
+    AND PROVINCE_SEQ = :arg 
+
+

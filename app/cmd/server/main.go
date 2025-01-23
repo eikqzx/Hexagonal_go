@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 )
 
@@ -24,7 +25,9 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Prefork: true, // เปิดใช้งาน Prefork
 	})
-
+	app.Use(logger.New(logger.Config{
+		Format: "[${time}] ${status} - ${method} ${path} - ${latency}\n",
+	}))
 	// สร้าง HTTP Handler
 	httpHandler := http.NewHandler()
 	app.Get("/users", httpHandler.GetUsers)
@@ -32,9 +35,16 @@ func main() {
 	app.Get("/landofficesSVA", httpHandler.GetSVALandOffice)
 	app.Post("/getMasLandOfficeByProvince", httpHandler.GetLandOfficeByLandOfficeSeq)
 	app.Post("/01getSVACadastral", httpHandler.GetFetch01getSVACadastral)
-	app.Post("/02getCadastralImageNull", httpHandler.GetFetch02SVACadastralImageNull)
+	app.Post("/02getSVACadastralImageNull", httpHandler.GetFetch02SVACadastralImageNull)
 	app.Post("/02updateCadastralImageNull", httpHandler.Update02SVACadastralImageNull)
+	app.Post("/02getCadastralImage", httpHandler.Get02CadastralImage)
 	app.Post("/getSummarySheetCode", httpHandler.GetSummarySheetCode)
+	app.Post("/getSummaryBoxBySheetCode", httpHandler.GetSummaryBoxBySheetCode)
+	app.Post("/getCadastralKeyin", httpHandler.GetCadastralKeyin)
+	app.Post("/getListAllKeyin", httpHandler.GetListAllKeyin)
+	app.Get("/getSurveyDocTypeGroup", httpHandler.GetSurveyDocTypeGroup)
+	app.Get("/typeOfSurvey", httpHandler.GetTypeOfSurvey)
+	app.Get("/getProvince", httpHandler.GetAllProvince)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)

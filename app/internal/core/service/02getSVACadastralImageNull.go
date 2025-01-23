@@ -34,3 +34,11 @@ func (s *Get02getSVACadastralImageNullService) Update02SVACadastralImageNullServ
 	}
 	return s.svaCadastralImageNullRepo.Update02SVACadastralImageNull(cadastralImage)
 }
+
+func (s *Get02getSVACadastralImageNullService) Get02CadastralImageService(cadastralSeq int64) ([]model.CadastralImage, error) {
+	if s.svaCadastralImageNullRepo == nil {
+		log.Println(s.svaCadastralImageNullRepo)
+		return nil, fmt.Errorf("repository not initialized")
+	}
+	return s.svaCadastralImageNullRepo.Get02CadastralImage(cadastralSeq)
+}

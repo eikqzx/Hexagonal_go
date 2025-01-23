@@ -7,7 +7,7 @@ type CadastralImage struct {
 	CadastralImageSeq       *int64     `json:"CADASTRAL_IMAGE_SEQ"`
 	LandofficeSeq           *int64     `json:"LANDOFFICE_SEQ"`
 	PrintplateTypeSeq       *int64     `json:"PRINTPLATE_TYPE_SEQ"`
-	CadastralSeq            *int64     `json:"CADASTRAL_SEQ"`
+	CadastralSeq            int64      `json:"CADASTRAL_SEQ"`
 	CadastralImageSeq_      *int64     `json:"CADASTRAL_IMAGE_SEQ_"`
 	SurveyDocTypeSeq        *int64     `json:"SURVEYDOCTYPE_SEQ"`
 	SurveyDocTypeSeq_       *int64     `json:"SURVEYDOCTYPE_SEQ_"`
@@ -55,7 +55,7 @@ type CadastralImage struct {
 	Image24bit              *int64     `json:"IMAGE_24BIT"`
 	ImageWidth              *int64     `json:"IMAGE_WIDTH"`
 	ImageHeight             *int64     `json:"IMAGE_HEIGHT"`
-	ImageCrop               *int64     `json:"IMAGE_CROP"`
+	ImageCrop               *string    `json:"IMAGE_CROP"`
 	ImageLost               *int64     `json:"IMAGE_LOST"`
 	ImageCorrupted          *int64     `json:"IMAGE_CORRUPTED"`
 	ImageReverse            *string    `json:"IMAGE_REVERSE"`

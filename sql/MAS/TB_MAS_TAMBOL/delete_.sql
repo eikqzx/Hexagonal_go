@@ -1,0 +1,8 @@
+
+
+DELETE 
+FROM MAS_.TB_MAS_TAMBOL 
+WHERE 1 = 1 
+    AND TAMBOL_SEQ = :arg 
+
+

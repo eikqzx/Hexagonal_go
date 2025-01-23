@@ -15,6 +15,9 @@ type Handler struct {
 	getSvaCadastral01Service service.GetSVACadastral01Service
 	getSVACadastralImageNull service.Get02getSVACadastralImageNullService
 	summarySheetCode         service.SummarySheetCodeService
+	surveyDocType            service.SurveyDocTypeService
+	typeOfSurvey             service.TypeOfSurveyService
+	province                 service.ProvinceService
 }
 
 // NewHandler สร้าง Handler ใหม่
@@ -24,7 +27,10 @@ func NewHandler() *Handler {
 	getSvaCadastral01Service := service.NewGetSVACadastral01Service()
 	getSVACadastralImageNull := service.NewGet02getSVACadastralImageNullService()
 	summarySheetCode := service.NewSummarySheetCodeService()
-	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull, summarySheetCode: *summarySheetCode} // ส่งค่าไปยัง Handler
+	surveyDocType := service.NewSurveyDocTypeService()
+	typeOfSurvey := service.NewTypeOfSurveyService()
+	province := service.NewProvinceService()
+	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull, summarySheetCode: *summarySheetCode, surveyDocType: *surveyDocType, typeOfSurvey: *typeOfSurvey, province: *province} // ส่งค่าไปยัง Handler
 }
 
 // GetUsers ดึงข้อมูลผู้ใช้ทั้งหมด
@@ -149,4 +155,110 @@ func (h *Handler) GetSummarySheetCode(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching 01getSVACadastral")
 	}
 	return c.JSON(summarySheetCode)
+}
+
+func (h *Handler) GetSummaryBoxBySheetCode(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ int64 `json:"LANDOFFICE_SEQ"` // Expecting cadastralSeq in the body as int64
+		SHEETCODE      int64 `json:"SHEETCODE"`      // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+	summaryBox, err := h.summarySheetCode.FetchSummaryBoxBySheetCode(request.LANDOFFICE_SEQ, request.SHEETCODE) // เรียกใช้ Service
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching 01getSVACadastral")
+	}
+	return c.JSON(summaryBox)
+}
+
+func (h *Handler) GetCadastralKeyin(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ int64  `json:"LANDOFFICE_SEQ"` // Expecting cadastralSeq in the body as int64
+		SHEETCODE      int64  `json:"SHEETCODE"`      // Expecting cadastralSeq in the body as int64
+		BOX_NO         string `json:"BOX_NO"`         // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+	cadastralKeyin, err := h.summarySheetCode.FetchGetCadastralKeyin(request.LANDOFFICE_SEQ, request.SHEETCODE, request.BOX_NO) // เรียกใช้ Service
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching GetCadastralKeyin")
+	}
+
+	return c.JSON(cadastralKeyin)
+}
+
+func (h *Handler) GetSurveyDocTypeGroup(c *fiber.Ctx) error {
+	surveyDocTypeGroups, err := h.surveyDocType.FetchSurveyDocType()
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching SurveyDocTypeGroup")
+	}
+	return c.JSON(surveyDocTypeGroups)
+}
+
+func (h *Handler) GetListAllKeyin(c *fiber.Ctx) error {
+	var request struct {
+		LANDOFFICE_SEQ  int64  `json:"LANDOFFICE_SEQ"`  // Expecting cadastralSeq in the body as int64
+		PAGE            int64  `json:"PAGE"`            // Expecting cadastralSeq in the body as int64
+		PAGE_ROW        int64  `json:"PAGE_ROW"`        // Expecting cadastralSeq in the body as int64
+		START_SHEETCODE *int64 `json:"START_SHEETCODE"` // Expecting cadastralSeq in the body as int64
+		END_SHEETCODE   *int64 `json:"END_SHEETCODE"`   // Expecting cadastralSeq in the body as int64
+		START_BOX       *int64 `json:"START_BOX"`       // Expecting cadastralSeq in the body as int64
+		END_BOX         *int64 `json:"END_BOX"`         // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+	listAllKeyin, err := h.summarySheetCode.FetchGetListAllKeyin(request.LANDOFFICE_SEQ, request.PAGE, request.PAGE_ROW, request.START_SHEETCODE, request.END_SHEETCODE, request.START_BOX, request.END_BOX) // เรียกใช้ Service
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching GetListAllKeyin")
+	}
+
+	return c.JSON(listAllKeyin)
+}
+
+func (h *Handler) Get02CadastralImage(c *fiber.Ctx) error {
+	var request struct {
+		CADASTRAL_SEQ int64 `json:"CADASTRAL_SEQ"` // Expecting cadastralSeq in the body as int64
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+	cadastralImage, err := h.getSVACadastralImageNull.Get02CadastralImageService(request.CADASTRAL_SEQ) // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Get02CadastralImage")
+	}
+	return c.JSON(cadastralImage)
+}
+
+func (h *Handler) GetTypeOfSurvey(c *fiber.Ctx) error {
+	surveyDocType, err := h.typeOfSurvey.FetchTypeOfSurvey() // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Get02CadastralImage")
+	}
+	return c.JSON(surveyDocType)
+}
+
+func (h *Handler) GetAllProvince(c *fiber.Ctx) error {
+	provinces, err := h.province.FetchAllProvinces() // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
+	}
+	return c.JSON(provinces)
 }

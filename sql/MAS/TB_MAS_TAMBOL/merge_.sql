@@ -1,0 +1,49 @@
+
+
+MERGE INTO MAS_.TB_MAS_TAMBOL Target_ 
+USING ( 
+    SELECT :arg TAMBOL_SEQ, :TAMBOL_SYS_ TAMBOL_SYS_, 
+        :TAMBOL_ID TAMBOL_ID, :TAMBOL_ABBR TAMBOL_ABBR, 
+        :TAMBOL_NAME_TH TAMBOL_NAME_TH, :TAMBOL_NAME_EN TAMBOL_NAME_EN, 
+        :TAMBOL_TYPE_SEQ TAMBOL_TYPE_SEQ, 
+        :TAMBOL_NOTE TAMBOL_NOTE, 
+        :RECORD_STATUS RECORD_STATUS, 
+        :CREATE_USER CREATE_USER, SYSDATE CREATE_DTM, 
+        :CREATE_USER LAST_UPD_USER, SYSDATE LAST_UPD_DTM 
+    FROM DUAL 
+    WHERE 1 = 1 
+) Source_ 
+    ON ( Source_.TAMBOL_SEQ = Target_.TAMBOL_SEQ ) 
+
+WHEN NOT MATCHED THEN 
+    INSERT ( 
+        TAMBOL_SEQ, TAMBOL_SYS_, 
+        TAMBOL_ID, TAMBOL_ABBR, 
+        TAMBOL_NAME_TH, TAMBOL_NAME_EN, 
+        TAMBOL_TYPE_SEQ, 
+        TAMBOL_NOTE, 
+        RECORD_STATUS, 
+        CREATE_USER, CREATE_DTM--, LAST_UPD_USER, LAST_UPD_DTM 
+    ) VALUES ( 
+        MAS_.SQ_MAS_TAMBOL_TAMBOL_SEQ.NEXTVAL, Source_.TAMBOL_SYS_, 
+        Source_.TAMBOL_ID, Source_.TAMBOL_ABBR, 
+        Source_.TAMBOL_NAME_TH, Source_.TAMBOL_NAME_EN, 
+        Source_.TAMBOL_TYPE_SEQ, 
+        Source_.TAMBOL_NOTE, 
+        Source_.RECORD_STATUS, 
+        Source_.CREATE_USER, Source_.CREATE_DTM--, Source_.LAST_UPD_USER, Source_.LAST_UPD_DTM 
+    ) 
+
+WHEN MATCHED THEN 
+    UPDATE SET 
+        -- Target_.TAMBOL_SEQ = Source_.TAMBOL_SEQ, 
+        Target_.TAMBOL_SYS_ = Source_.TAMBOL_SYS_, 
+        Target_.TAMBOL_ID = Source_.TAMBOL_ID, Target_.TAMBOL_ABBR = Source_.TAMBOL_ABBR, 
+        Target_.TAMBOL_NAME_TH = Source_.TAMBOL_NAME_TH, Target_.TAMBOL_NAME_EN = Source_.TAMBOL_NAME_EN, 
+        Target_.TAMBOL_TYPE_SEQ = Source_.TAMBOL_TYPE_SEQ, 
+        Target_.TAMBOL_NOTE = Source_.TAMBOL_NOTE, 
+        Target_.RECORD_STATUS = Source_.RECORD_STATUS, 
+        -- Target_.CREATE_USER = Source_.CREATE_USER, Target_.CREATE_DTM = Source_.CREATE_DTM, 
+        Target_.LAST_UPD_USER = Source_.LAST_UPD_USER,  Target_.LAST_UPD_DTM = Source_.LAST_UPD_DTM 
+
+

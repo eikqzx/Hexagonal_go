@@ -9,6 +9,7 @@ import (
 type Get02SVACadastralImageNullRepo interface {
 	Fetch02getSVACadastralImageNull(landofficeSeq int64) ([]model.CadastralImage, error) // ฟังก์ชันที่ต้องมีใน repository
 	Update02SVACadastralImageNull(cadastralImage model.CadastralImage) (sql.Result, error)
+	Get02CadastralImage(cadastralSeq int64) ([]model.CadastralImage, error)
 }
 
 func NewGetSVACadastralImageNullRepository() Get02SVACadastralImageNullRepo {

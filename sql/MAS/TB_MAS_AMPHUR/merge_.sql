@@ -1,0 +1,49 @@
+
+
+MERGE INTO MAS_.TB_MAS_AMPHUR Target_ 
+USING ( 
+    SELECT :arg AMPHUR_SEQ, :AMPHUR_SYS_ AMPHUR_SYS_, 
+        :AMPHUR_ID AMPHUR_ID, :AMPHUR_ABBR AMPHUR_ABBR, 
+        :AMPHUR_NAME_TH AMPHUR_NAME_TH, :AMPHUR_NAME_EN AMPHUR_NAME_EN, 
+        :AMPHUR_TYPE_SEQ AMPHUR_TYPE_SEQ, 
+        :AMPHUR_NOTE AMPHUR_NOTE, 
+        :RECORD_STATUS RECORD_STATUS, 
+        :CREATE_USER CREATE_USER, SYSDATE CREATE_DTM, 
+        :CREATE_USER LAST_UPD_USER, SYSDATE LAST_UPD_DTM 
+    FROM DUAL 
+    WHERE 1 = 1 
+) Source_ 
+    ON ( Source_.AMPHUR_SEQ = Target_.AMPHUR_SEQ ) 
+
+WHEN NOT MATCHED THEN 
+    INSERT ( 
+        AMPHUR_SEQ, AMPHUR_SYS_, 
+        AMPHUR_ID, AMPHUR_ABBR, 
+        AMPHUR_NAME_TH, AMPHUR_NAME_EN, 
+        AMPHUR_TYPE_SEQ, 
+        AMPHUR_NOTE, 
+        RECORD_STATUS, 
+        CREATE_USER, CREATE_DTM--, LAST_UPD_USER, LAST_UPD_DTM 
+    ) VALUES ( 
+        MAS_.SQ_MAS_AMPHUR_AMPHUR_SEQ.NEXTVAL, Source_.AMPHUR_SYS_, 
+        Source_.AMPHUR_ID, Source_.AMPHUR_ABBR, 
+        Source_.AMPHUR_NAME_TH, Source_.AMPHUR_NAME_EN, 
+        Source_.AMPHUR_TYPE_SEQ, 
+        Source_.AMPHUR_NOTE, 
+        Source_.RECORD_STATUS, 
+        Source_.CREATE_USER, Source_.CREATE_DTM--, Source_.LAST_UPD_USER, Source_.LAST_UPD_DTM 
+    ) 
+
+WHEN MATCHED THEN 
+    UPDATE SET 
+        -- Target_.AMPHUR_SEQ = Source_.AMPHUR_SEQ, 
+        Target_.AMPHUR_SYS_ = Source_.AMPHUR_SYS_, 
+        Target_.AMPHUR_ID = Source_.AMPHUR_ID, Target_.AMPHUR_ABBR = Source_.AMPHUR_ABBR, 
+        Target_.AMPHUR_NAME_TH = Source_.AMPHUR_NAME_TH, Target_.AMPHUR_NAME_EN = Source_.AMPHUR_NAME_EN, 
+        Target_.AMPHUR_TYPE_SEQ = Source_.AMPHUR_TYPE_SEQ, 
+        Target_.AMPHUR_NOTE = Source_.AMPHUR_NOTE, 
+        Target_.RECORD_STATUS = Source_.RECORD_STATUS, 
+        -- Target_.CREATE_USER = Source_.CREATE_USER, Target_.CREATE_DTM = Source_.CREATE_DTM, 
+        Target_.LAST_UPD_USER = Source_.LAST_UPD_USER,  Target_.LAST_UPD_DTM = Source_.LAST_UPD_DTM 
+
+
