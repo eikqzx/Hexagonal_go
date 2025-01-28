@@ -4,6 +4,7 @@ import (
 	"Hexagonal_go/app/internal/core/model"
 	"Hexagonal_go/app/internal/core/service"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,6 +19,10 @@ type Handler struct {
 	surveyDocType            service.SurveyDocTypeService
 	typeOfSurvey             service.TypeOfSurveyService
 	province                 service.ProvinceService
+	amphurService            service.AmphurService
+	tambolService            service.TambolService
+	cadastralLandService     service.CadastralLandService
+	getMap01                 service.GetMap01Service
 }
 
 // NewHandler สร้าง Handler ใหม่
@@ -30,7 +35,18 @@ func NewHandler() *Handler {
 	surveyDocType := service.NewSurveyDocTypeService()
 	typeOfSurvey := service.NewTypeOfSurveyService()
 	province := service.NewProvinceService()
-	return &Handler{userService: *userService, landOfficeService: *landOfficeService, getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull, summarySheetCode: *summarySheetCode, surveyDocType: *surveyDocType, typeOfSurvey: *typeOfSurvey, province: *province} // ส่งค่าไปยัง Handler
+	amphurService := service.NewAmphurService()
+	tambolService := service.NewTambolService()
+	cadastralLandService := service.NewCadastralLandService()
+	getMap01 := service.NewGetMap01Service()
+	return &Handler{
+		userService: *userService, landOfficeService: *landOfficeService,
+		getSvaCadastral01Service: *getSvaCadastral01Service, getSVACadastralImageNull: *getSVACadastralImageNull,
+		summarySheetCode: *summarySheetCode, surveyDocType: *surveyDocType,
+		typeOfSurvey: *typeOfSurvey, province: *province, amphurService: *amphurService,
+		tambolService: *tambolService, cadastralLandService: *cadastralLandService,
+		getMap01: *getMap01,
+	} // ส่งค่าไปยัง Handler
 }
 
 // GetUsers ดึงข้อมูลผู้ใช้ทั้งหมด
@@ -258,7 +274,123 @@ func (h *Handler) GetAllProvince(c *fiber.Ctx) error {
 	provinces, err := h.province.FetchAllProvinces() // เรียกใช้ landOfficeService
 	if err != nil {
 		log.Println(err)
-		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Province")
 	}
 	return c.JSON(provinces)
+}
+
+func (h *Handler) GetAmphur(c *fiber.Ctx) error {
+	amphurs, err := h.amphurService.FetchAllAmphur() // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Amphur")
+	}
+	return c.JSON(amphurs)
+}
+
+func (h *Handler) GetAmphurByProvinceID(c *fiber.Ctx) error {
+	idRequest := c.Params("id")
+
+	// var request struct {
+	// 	PROVINCE_SEQ int64 `json:"PROVINCE_SEQ"` // Expecting provinceSeq in the body as int64
+	// }
+
+	id, err := strconv.ParseInt(idRequest, 10, 64)
+	if err != nil {
+		// หากแปลงไม่ได้ ให้ส่งข้อความ error กลับ
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid ID format",
+		})
+	}
+
+	amphurs, err := h.amphurService.FetchAmphurByProvinceID(id) // เรียกใช้ landOfficeService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Amphur")
+	}
+	return c.JSON(amphurs)
+}
+
+func (h *Handler) GetTambol(c *fiber.Ctx) error {
+	tambols, err := h.tambolService.FetchAllTambol() // เรียกใช้ tambolService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Tambol")
+	}
+	return c.JSON(tambols)
+}
+
+func (h *Handler) GetTambolByAmphurID(c *fiber.Ctx) error {
+	idRequest := c.Params("id")
+
+	id, err := strconv.ParseInt(idRequest, 10, 64)
+	if err != nil {
+		// หากแปลงไม่ได้ ให้ส่งข้อความ error กลับ
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid ID format",
+		})
+	}
+
+	tambols, err := h.tambolService.FetchTambolByAmphurID(id) // เรียกใช้ tambolService
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching Tambol")
+	}
+	return c.JSON(tambols)
+}
+
+func (h *Handler) GetAllCadastralLand(c *fiber.Ctx) error {
+	cadastralLand, err := h.cadastralLandService.FetchAllCadastralLand() // เรียกใช้ CadastralLand
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
+	}
+	return c.JSON(cadastralLand)
+}
+
+func (h *Handler) GetCadastralLandByCadastralSeq(c *fiber.Ctx) error {
+	idRequest := c.Params("id")
+
+	id, err := strconv.ParseInt(idRequest, 10, 64)
+	if err != nil {
+		// หากแปลงไม่ได้ ให้ส่งข้อความ error กลับ
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid ID format",
+		})
+	}
+
+	cadastralLand, err := h.cadastralLandService.CadastralLandByCadastralSeq(id) // เรียกใช้ CadastralLand
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching land offices")
+	}
+	return c.JSON(cadastralLand)
+}
+
+func (h *Handler) GetMap01(c *fiber.Ctx) error {
+	var request struct {
+		OGR_FID        *int64  `json:"OGR_FID"`
+		LANDOFFICE_SEQ *int64  `json:"LANDOFFICE_SEQ"`
+		UTMMAP1        *string `json:"UTMMAP1"`
+		UTMMAP2        *string `json:"UTMMAP2"`
+		UTMMAP3        *string `json:"UTMMAP3"`
+		UTMMAP4        *string `json:"UTMMAP4"`
+		UTMSCALE       *string `json:"UTMSCALE"`
+		LAND_NO        *string `json:"LAND_NO"`
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
+		})
+	}
+
+	mapLandGISList, err := h.getMap01.FetchMapLandGIS(
+		request.OGR_FID, request.LANDOFFICE_SEQ, request.UTMMAP1, request.UTMMAP2, request.UTMMAP3, request.UTMMAP4, request.UTMSCALE, request.LAND_NO,
+	)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching map land GIS")
+	}
+	return c.JSON(mapLandGISList)
 }

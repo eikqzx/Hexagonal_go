@@ -61,6 +61,7 @@ func (r *GetSVACadastral01RepositoryImpl) Fetch01getSVACadastral(cadastralSeq in
 		); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %v", err)
 		}
+
 		cadastrals = append(cadastrals, cadastral)
 	}
 	if err := rows.Err(); err != nil {

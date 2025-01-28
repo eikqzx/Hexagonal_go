@@ -45,6 +45,13 @@ func main() {
 	app.Get("/getSurveyDocTypeGroup", httpHandler.GetSurveyDocTypeGroup)
 	app.Get("/typeOfSurvey", httpHandler.GetTypeOfSurvey)
 	app.Get("/getProvince", httpHandler.GetAllProvince)
+	app.Get("/getAmphur", httpHandler.GetAmphur)
+	app.Get("/amphurByProvince/:id", httpHandler.GetAmphurByProvinceID)
+	app.Get("/getTambol", httpHandler.GetTambol)
+	app.Get("/tambolByAmphur/:id", httpHandler.GetTambolByAmphurID)
+	app.Get("/cadastralLand", httpHandler.GetAllCadastralLand)
+	app.Get("/cadastralLandBycadastralSeq/:id", httpHandler.GetCadastralLandByCadastralSeq)
+	app.Post("/01getmap", httpHandler.GetMap01)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)

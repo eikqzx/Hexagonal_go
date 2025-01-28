@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	_ "github.com/godror/godror"
 	"github.com/joho/godotenv"
@@ -38,15 +37,17 @@ func InitDB() {
 		log.Fatalf("Failed to connect to Oracle Database: %v", err)
 	}
 
-	// ตั้งค่า connection pool
-	DB.SetMaxOpenConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถเปิดได้พร้อมกัน
-	DB.SetMaxIdleConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถอยู่ในสถานะ idle
-	DB.SetConnMaxLifetime(5 * time.Minute) // ระยะเวลาสูงสุดที่การเชื่อมต่อสามารถใช้งานได้
+	// // ตั้งค่า connection pool
+	// DB.SetMaxOpenConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถเปิดได้พร้อมกัน
+	// DB.SetMaxIdleConns(25)                 // จำนวนการเชื่อมต่อสูงสุดที่สามารถอยู่ในสถานะ idle
+	// DB.SetConnMaxLifetime(5 * time.Minute) // ระยะเวลาสูงสุดที่การเชื่อมต่อสามารถใช้งานได้
 
 	// ตรวจสอบการเชื่อมต่อ
 	if err := DB.Ping(); err != nil {
 		log.Fatalf("Failed to ping database: %v", err)
 	}
+
+	log.Println("Successfully connected to the database")
 }
 
 func CloseDB() {
@@ -57,5 +58,8 @@ func CloseDB() {
 		} else {
 			log.Println("Database connection closed successfully.")
 		}
+		DB = nil
+	} else {
+		log.Println("Database connection is already closed or not initialized.")
 	}
 }
