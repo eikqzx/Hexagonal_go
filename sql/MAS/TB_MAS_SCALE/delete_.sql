@@ -1,0 +1,8 @@
+
+
+DELETE 
+FROM MAS_.TB_MAS_SCALE 
+WHERE 1 = 1 
+    AND SCALE_SEQ = :arg 
+
+

@@ -52,6 +52,8 @@ func main() {
 	app.Get("/cadastralLand", httpHandler.GetAllCadastralLand)
 	app.Get("/cadastralLandBycadastralSeq/:id", httpHandler.GetCadastralLandByCadastralSeq)
 	app.Post("/01getmap", httpHandler.GetMap01)
+	app.Put("/updateCadastralLand/:id", httpHandler.UpdateCadastralLand)
+	app.Post("/cadastralLand", httpHandler.InsertCadastralLand)
 	// เริ่มเซิร์ฟเวอร์
 	log.Printf("Starting server on port %s", port)
 	app.Listen(":" + port)

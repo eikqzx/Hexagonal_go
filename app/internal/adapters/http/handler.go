@@ -394,3 +394,98 @@ func (h *Handler) GetMap01(c *fiber.Ctx) error {
 	}
 	return c.JSON(mapLandGISList)
 }
+
+func (h *Handler) UpdateCadastralLand(c *fiber.Ctx) error {
+	idRequest := c.Params("id")
+	id, err := strconv.ParseInt(idRequest, 10, 64)
+	if err != nil {
+		// หากแปลงไม่ได้ ให้ส่งข้อความ error กลับ
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid ID format",
+		})
+	}
+	var cadastralLand model.CadastralLand
+	if err := c.BodyParser(&cadastralLand); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request payload")
+	}
+
+	result, err := h.cadastralLandService.UpdateCadastralLand(cadastralLand, id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	response := map[string]interface{}{
+		"message":       "Cadastral land updated successfully",
+		"rows_affected": rowsAffected,
+		"succeed":       rowsAffected > 0,
+	}
+	return c.JSON(response)
+}
+
+func (h *Handler) InsertCadastralLand(c *fiber.Ctx) error {
+	var request struct {
+		CadastralLandNganNum  *int64  `json:"CADASTRAL_LAND_NGAN_NUM"`
+		CadastralLandRaiNum   *int64  `json:"CADASTRAL_LAND_RAI_NUM"`
+		CadastralLandWaNum    *int64  `json:"CADASTRAL_LAND_WA_NUM"`
+		CadastralLandSubwaNum *int64  `json:"CADASTRAL_LAND_SUBWA_NUM"`
+		CadastralLandUtmap1   *string `json:"CADASTRAL_LAND_UTMAP1"`
+		CadastralLandUtmap2   *string `json:"CADASTRAL_LAND_UTMAP2"`
+		CadastralLandUtmap3   *string `json:"CADASTRAL_LAND_UTMAP3"`
+		CadastralLandUtmap4   *string `json:"CADASTRAL_LAND_UTMAP4"`
+		CadastralProvinceSeq  *int64  `json:"CADASTRAL_PROVINCE_SEQ"`
+		CadastralAmphurSeq    *int64  `json:"CADASTRAL_AMPHUR_SEQ"`
+		CadastralTambolSeq    *int64  `json:"CADASTRAL_TAMBOL_SEQ"`
+		ScaleMap              *string `json:"SCALE_MAP"`
+		ScaleSeq              *int64  `json:"SCALE_SEQ"`
+		CadastralSeq          *int64  `json:"CADASTRAL_SEQ"`
+		LandofficeSeq         *int64  `json:"LANDOFFICE_SEQ"`
+		CreateUser            *string `json:"CREATE_USER"`
+		RecordStatus          *string `json:"RECORD_STATUS"`
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON"})
+	}
+
+	cadastralLand := &model.CadastralLand{
+		CadastralLandNganNum:  request.CadastralLandNganNum,
+		CadastralLandRaiNum:   request.CadastralLandRaiNum,
+		CadastralLandWaNum:    request.CadastralLandWaNum,
+		CadastralLandSubwaNum: request.CadastralLandSubwaNum,
+		CadastralLandUtmap1:   request.CadastralLandUtmap1,
+		CadastralLandUtmap2:   request.CadastralLandUtmap2,
+		CadastralLandUtmap3:   request.CadastralLandUtmap3,
+		CadastralLandUtmap4:   request.CadastralLandUtmap4,
+		CadastralProvinceSeq:  request.CadastralProvinceSeq,
+		CadastralAmphurSeq:    request.CadastralAmphurSeq,
+		CadastralTambolSeq:    request.CadastralTambolSeq,
+		ScaleMap:              request.ScaleMap,
+		ScaleSeq:              request.ScaleSeq,
+		CadastralSeq:          request.CadastralSeq,
+		LandofficeSeq:         request.LandofficeSeq,
+		CreateUser:            request.CreateUser,
+		RecordStatus:          request.RecordStatus,
+	}
+
+	result, err := h.cadastralLandService.InsertCadastralLand(cadastralLand)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	response := map[string]interface{}{
+		"message":       "Cadastral Land Insert successfully",
+		"rows_affected": rowsAffected,
+		"succeed":       rowsAffected > 0,
+	}
+	return c.JSON(response)
+}

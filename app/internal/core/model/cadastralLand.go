@@ -4,13 +4,13 @@ import "time"
 
 // CadastralLand เป็นโมเดลสำหรับข้อมูล Cadastral Land
 type CadastralLand struct {
-	CadastralLandSeq         *int       `json:"CADASTRAL_LAND_SEQ"`
-	CadastralSeq             *int       `json:"CADASTRAL_SEQ"`
-	CadastralSeq_            *int       `json:"CADASTRAL_SEQ_"`
-	LandOrder                *int       `json:"LAND_ORDER"`
+	CadastralLandSeq         *int64     `json:"CADASTRAL_LAND_SEQ"`
+	CadastralSeq             *int64     `json:"CADASTRAL_SEQ"`
+	CadastralSeq_            *int64     `json:"CADASTRAL_SEQ_"`
+	LandOrder                *int64     `json:"LAND_ORDER"`
 	ZoneLand                 *string    `json:"ZONE_LAND"`
-	LandofficeSeq            *int       `json:"LANDOFFICE_SEQ"`
-	SheettypeSeq             *int       `json:"SHEETTYPE_SEQ"`
+	LandofficeSeq            *int64     `json:"LANDOFFICE_SEQ"`
+	SheettypeSeq             *int64     `json:"SHEETTYPE_SEQ"`
 	SheettypeNameTh          *string    `json:"SHEETTYPE_NAME_TH"`
 	CadastralLandUtmap       *string    `json:"CADASTRAL_LAND_UTMMAP"`
 	CadastralLandUtmap1      *string    `json:"CADASTRAL_LAND_UTMMAP1"`
@@ -38,23 +38,23 @@ type CadastralLand struct {
 	Airphotomap1_            *string    `json:"AIRPHOTOMAP1_"`
 	Airphotomap2_            *string    `json:"AIRPHOTOMAP2_"`
 	Airphotomap3_            *string    `json:"AIRPHOTOMAP3_"`
-	ScaleSeq                 *int       `json:"SCALE_SEQ"`
+	ScaleSeq                 *int64     `json:"SCALE_SEQ"`
 	ScaleMap                 *string    `json:"SCALE_MAP"`
 	ScaleMap_                *string    `json:"SCALE_MAP_"`
-	CadastralLandRaiNum      *int       `json:"CADASTRAL_LAND_RAI_NUM"`
-	CadastralLandNganNum     *int       `json:"CADASTRAL_LAND_NGAN_NUM"`
-	CadastralLandWaNum       *int       `json:"CADASTRAL_LAND_WA_NUM"`
-	CadastralLandSubwaNum    *int       `json:"CADASTRAL_LAND_SUBWA_NUM"`
-	CadastralProvinceSeq     *int       `json:"CADASTRAL_PROVINCE_SEQ"`
-	CadastralAmphurSeq       *int       `json:"CADASTRAL_AMPHUR_SEQ"`
-	CadastralTambolSeq       *int       `json:"CADASTRAL_TAMBOL_SEQ"`
+	CadastralLandRaiNum      *int64     `json:"CADASTRAL_LAND_RAI_NUM"`
+	CadastralLandNganNum     *int64     `json:"CADASTRAL_LAND_NGAN_NUM"`
+	CadastralLandWaNum       *int64     `json:"CADASTRAL_LAND_WA_NUM"`
+	CadastralLandSubwaNum    *int64     `json:"CADASTRAL_LAND_SUBWA_NUM"`
+	CadastralProvinceSeq     *int64     `json:"CADASTRAL_PROVINCE_SEQ"`
+	CadastralAmphurSeq       *int64     `json:"CADASTRAL_AMPHUR_SEQ"`
+	CadastralTambolSeq       *int64     `json:"CADASTRAL_TAMBOL_SEQ"`
 	CadastralSurveyNo        *string    `json:"CADASTRAL_SURVEY_NO"`
 	CadastralSurveyNo_       *string    `json:"CADASTRAL_SURVEY_NO_"`
 	StaticFlag               *string    `json:"STATIC_FLAG"`
-	ParcelSeq                *int       `json:"PARCEL_SEQ"`
-	CadastralLandLogSeq      *int       `json:"CADASTRAL_LAND_LOG_SEQ"`
-	ProcessSeq_              *int       `json:"PROCESS_SEQ_"`
-	StatusSeq_               *int       `json:"STATUS_SEQ_"`
+	ParcelSeq                *int64     `json:"PARCEL_SEQ"`
+	CadastralLandLogSeq      *int64     `json:"CADASTRAL_LAND_LOG_SEQ"`
+	ProcessSeq_              *int64     `json:"PROCESS_SEQ_"`
+	StatusSeq_               *int64     `json:"STATUS_SEQ_"`
 	CadastralLandNote        *string    `json:"CADASTRAL_LAND_NOTE"`
 	RecordStatus             *string    `json:"RECORD_STATUS"`
 	CreateUser               *string    `json:"CREATE_USER"`
